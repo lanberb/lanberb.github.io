@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" href="./assets/styles/index.min.css">
+    <style>
+        *{margin: 0; padding: 0;}
+        html, body{overflow: hidden;}
+    </style>
+    <title>Nao Sasaki｜Lanberb</title>
+</head>
+<body>
+    <div id="app">
+        <div class="dawn">
+            <img class="cat" src="./assets/images/svg/layer1.svg">
+        </div>
+        <div class="enableMusic">
+            <p>
+                <span>Turn on music to enjoy.</span>
+            </p>
+            <p>
+                <span>このサイトは音楽を再生します</span>
+            </p>
+            <div class="button">
+                <button onclick="enableMusic(true), toHome()">
+                    <span>
+                        Turn On
+                    </span>
+                </button>
+                <button onclick="enableMusic(false), toHome()">
+                    <span>
+                        Turn Off
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="loading">
+            <p class="message">
+                <span>May we make this encounter great.</span>
+            </p>
+            <p class="percentage">
+                <span>0</span>
+            </p>
+        </div>
+        <div class="navigation">
+            <div class="status">
+                <p>
+                    <span>I appreciate you coming today.</span>
+                </p>
+            </div>
+            <div class="toggleMusic" onclick="enableMusic(true)">
+                <img src="./assets/images/svg/music_note_white_48dp.svg">
+            </div>
+            <ul class="links">
+                <li>
+                    <a href="#about">
+                        <span>About</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#contact">
+                        <span>Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="slider">
+            <div class="me">
+                <div class="box">
+                </div>
+                <h1>Lanberb</h1>
+            </div>
+        </div>
+        <div class="viewer">
+            <div class="contents">
+                <div class="title">
+                    <h1></h1>
+                    <hr noshade>
+                    <p>
+                        <span></span>
+                    </p>
+                </div>
+                <div class="thumbnail">
+                    <img>
+                </div>
+                <div class="body"></div>
+            </div>
+        </div>
+    </div>
+    <div id="cursor"></div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    <script>
+        // variables: 頑張る健気な変数たち
+        // 処理系
+        let toggleMusic = false;
+        let music = new Audio('./assets/music/bgm_maoudamashii_piano29.mp3'); 
+        music.volume = 0.1;
+        let touchPoint = {
+            x: 0,
+            y: 0,
+        }
+        let contents = {};
+        const dawnDuraion = 60;
+        const dawnInterval = 10;
+        // 要素系
+        const el_cursor = document.querySelector('#cursor');
+        const el_dawn = document.querySelector('.dawn');
+        const el_enableMusic = document.querySelector('.enableMusic');
+        const el_loading_message = document.querySelector('.loading .message span');
+        const el_loading_percentage = document.querySelector('.loading .percentage span');
+        const el_nav = document.querySelector('.navigation');
+        const el_slider = document.querySelector('.slider');
+        const el_slider_me = document.querySelector('.slider .me');
+        const el_viewer = document.querySelector('.viewer');
+        const el_viewer_title = document.querySelector('.viewer .title h1');
+        const el_viewer_subtitle = document.querySelector('.viewer .title p span');
+        const el_viewer_thumbnail = document.querySelector('.viewer .thumbnail');
+        const el_viewer_thumbnail_img = document.querySelector('.viewer .thumbnail img');
+        const el_viewer_body = document.querySelector('.viewer .body');
+
+        // methods: 私が書いた可愛い関数たち
+        // 値返す系, 関数式
+        const sleep = (sec) => new Promise((resolve, reject) => setTimeout(resolve, sec * 1000));
+        const dawn_size = () => {
+            if (window.innerWidth > window.innerHeight) return window.innerHeight * 3;
+            if (window.innerWidth < window.innerHeight) return window.innerWidth * 3;
+        };
+        
+        // アニメーション系
+        async function countUp(num){
+            for (let i = 0; i < num; i++) {
+                if (el_loading_percentage.textContent < 100) {
+                    el_loading_percentage.textContent++;
+                    // const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${75 - i}%, rgb(3, 80, 111) ${80 - i}%, rgb(113, 70, 116) ${100 - i}%, rgb(159, 105, 118), rgb(204, 139, 121), rgb(250, 174, 123))`;
+                    const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${70 - i}%, rgb(3, 80, 111) ${120 - i}%, rgb(250, 174, 123))`;
+                    el_dawn.style.background = gradient;
+                }
+                if (el_loading_percentage.textContent == 50) el_loading_message.textContent = "It's an honor to meet you.";
+                await sleep(0.01);
+            }
+        }
+        async function loadComplete(){
+            // loadアニメーションコンプ時にアクティブ
+            //アニメーションタイムラインってどこにどうやって書くのが正解なの〜〜😭
+            const tl = new TimelineMax();
+            await tl.set(el_dawn, {
+                maxWidth: dawn_size(),
+                maxHeight: dawn_size(),
+            }).to([el_loading_percentage, el_loading_message], 0.5, {
+                opacity: 0,
+            }).set(el_enableMusic, {
+                display: 'block',
+                zIndex: 1,
+            }).to(el_enableMusic, 0.5, {
+                opacity: 1,
+            }).set('.loading', {
+                display: 'none',
+            });
+        }
+        async function toHome(){
+            const tl = new TimelineMax();
+            await tl.to([el_enableMusic, '.dawn img'], 0.5, {
+                opacity: 0,
+            }).to(el_dawn, 1, {
+                ease: Back.easeIn.config(1),
+                width: dawn_size(),
+                height: dawn_size(),
+            }).set(['.loading', el_enableMusic], {
+                display: 'none',
+            }).set([el_nav, el_slider_me], {
+                display: 'block',
+            }).to([el_nav, el_slider_me], 1, {
+                opacity: 1,
+            }).fromTo('.box', 0.25, {
+                width: 0,
+                height: 0,
+            }, {
+                ease: Back.easeOut.config(1),
+                width: '360px',
+            }).to('.box', 0.25, {
+                delay: 0.5,
+                ease: Back.easeOut.config(1),
+                height: '360px',
+            }).to('.slider .me h1', 1, {
+                '-webkit-filter': `blur(0)`,
+            }).staggerTo('.slide', 0.15, {
+                opacity: 1
+            }, 0.1).set(el_slider, {
+                'pointer-events': 'all',
+            });
+        }
+        async function backHome() {
+            el_slider.scrollTo(0, 0);
+            el_slider.style.display = 'flex';
+            const tl = new TimelineMax();
+            await tl.to(el_viewer, 0.25, {
+                opacity: 0,
+            }).to(el_slider, 0.25, {
+                opacity: 1,
+            }).to([el_viewer_title, el_viewer_subtitle], 0.25, {
+                '-webkit-filter': `blur(80px)`,
+            });
+            el_viewer.style.display = await 'none';
+            await toHome();
+        }
+        async function toContent() {
+            const i = parseInt(location.hash.slice(1), 10);
+            const tl = new TimelineMax();
+            el_viewer.style.display = 'block';
+            el_viewer_title.textContent = contents.items[i].fields.title;
+            el_viewer_subtitle.textContent = contents.items[i].fields.titleJa;
+            el_viewer_thumbnail.style.background = '#' + contents.items[i].fields.color;
+            el_viewer_thumbnail_img.src = contents.items[i].fields.thumbnail.fields.file.url;
+            await tl.to(el_slider, 0.5, {
+                opacity: 0,
+            }).to(el_viewer, 0.5, {
+                opacity: 1,
+            }).to([el_viewer_title, el_viewer_subtitle], 2, {
+                '-webkit-filter': `blur(0)`,
+            });
+            el_slider.style.display = await 'none';
+            await insertElement(contents.items[i].fields.contents.content);
+        }
+        async function toAbout() {
+            el_slider.target.scrollLeft = 0;
+            const tl = new TimelineMax();
+            tl.to(el_dawn, 1, {
+                width: 0,
+                height: 0,
+            }).to([el_viewer_title, el_viewer_subtitle], 2, {
+                '-webkit-filter': `blur(0)`,
+            });
+            // .to(el_slider, 0.5, {
+            //     opacity: 0,
+            // }).set(el_viewer, {
+            //     display: 'block',
+            // }).to(el_viewer, 0.5, {
+            //     opacity: 1,
+            // }).to([el_viewer_title, el_viewer_subtitle], 2, {
+            //     '-webkit-filter': `blur(0)`,
+            // });
+        }
+        
+
+        // 動的処理系
+        function enableMusic(bool){
+            music.loop = true;
+            if (bool) toggleMusic = !toggleMusic;
+            if (toggleMusic) music.play();
+            if (!toggleMusic) music.pause();
+        }
+        function selectContent(index){
+            location.hash = index;
+        }
+        function insertElement(contents) {
+            while (el_viewer_body.firstChild) el_viewer_body.removeChild(el_viewer_body.firstChild);
+            for (let i = 0; i < contents.length; i++) {
+                if (contents[i].nodeType == 'paragraph') makeParagraph(contents[i]);
+                if (contents[i].nodeType == 'embedded-asset-block')  makeImage(contents[i]);
+            }
+        }
+        function makeParagraph(data) {
+            const p = document.createElement('p');
+            const texts = data.content[0].value.split(/\r\n|\n|\r/);
+            for (let i = 0; i < texts.length; i++) {
+                const span = document.createElement('span');
+                const br = document.createElement('br');
+                p.classList.add('paragraph');
+                span.textContent = texts[i];
+                p.appendChild(span);
+                p.appendChild(br);
+            }
+            el_viewer_body.appendChild(p);
+        }
+        function makeImage(data) {
+            const div = document.createElement('div');
+            const img = document.createElement('img');
+            div.classList.add('imgBox');
+            img.src = data.data.target.fields.file.url;
+            div.appendChild(img);
+            el_viewer_body.appendChild(div);
+        }
+
+        // workers: ウィンドウイベントでに光り輝く可愛い関数たち
+        window.addEventListener('DOMContentLoaded', () => {
+            const hashString = location.hash.substr(1);
+            history.replaceState('', document.title, window.location.pathname);
+            fetch('/api/origin')
+            .then(res => {
+                const total = res.headers.get('content-length');
+                const reader = res.body.getReader();
+                reader.read().then(async function processResult(result) {
+                    // このifは1行目に！ここじゃなくても動くけど、result.done == true時に[Error]result.value.length is undefined が出て不細工！！
+                    if (result.done) return loadComplete();
+                    let chunk = result.value.length;
+                    let percentage = Math.round(chunk / total * 100);
+                    await countUp(percentage);
+                    await sleep(0.5);
+                    return reader.read().then(processResult);
+                });
+            });
+            fetch('/api/origin')
+            .then(res => res.json())
+            .then(data => {
+                contents = Object.assign(data);
+                for (let i = 0; i < data.items.length; i++) {
+                    const item = data.items[i];
+                    const slide = document.createElement('div');
+                    const img = document.createElement('img');
+                    const h1 = document.createElement('h1');
+                    slide.classList.add('slide');
+                    slide.setAttribute('onclick', `selectContent(${i})`);
+                    slide.style.background = '#' + item.fields.color;
+                    img.src = item.fields.thumbnail.fields.file.url;
+                    h1.textContent = item.fields.title;
+                    slide.appendChild(img);
+                    slide.appendChild(h1);
+                    el_slider.appendChild(slide);
+                }
+            })
+            .then(() => {
+                for (let i = 0; i < document.querySelectorAll('.slide').length; i++) {
+                    document.querySelectorAll('.slide')[i].addEventListener('mouseover', e => {
+                        TweenMax.to(el_dawn, 1, {
+                            background: '#' + contents.items[i].fields.color
+                        });
+                        document.querySelectorAll('.slide')[i].style.background = '#fff';
+                    });
+                    document.querySelectorAll('.slide')[i].addEventListener('mouseleave', e => {
+                        TweenMax.to(el_dawn, 1, {
+                            background: `linear-gradient(rgb(10, 4, 60) -50%, rgb(10, 4, 60) -30%, rgb(3, 80, 111) 20%, rgb(250, 174, 123))`,
+                        });
+                        document.querySelectorAll('.slide')[i].style.background = '#' + contents.items[i].fields.color;
+                    });
+                }
+            })
+        });
+        window.addEventListener('hashchange', async (e) => {
+            if (!location.hash) backHome();
+            if (!!location.hash) {
+                if (location.hash == '#about') {
+                    toAbout();
+                } else {
+                    toContent();
+                }
+            }
+        });
+        // let scrollAmount = 0;
+        // el_slider.addEventListener('scroll', (e) => {
+        //     let percent = Math.abs(e.target.scrollLeft - scrollAmount) / 100;
+        //     if (percent >= 1) percent = 1;
+        //     console.log(percent)
+        //     scrollAmount = e.target.scrollLeft;
+        // });
+    </script>
+</body>
+</html>
