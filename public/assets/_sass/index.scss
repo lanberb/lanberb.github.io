@@ -20,6 +20,7 @@
 $font-ja: 'Hannari-otf', 'Hannari-ttf', serif;
 $font-en: 'eustache-otf', 'eustache-ttf', fantasy, cursive;
 html, body{
+    touch-action: none;
     -webkit-font-smoothing: antialiased;
     background: #11100E;
 }
