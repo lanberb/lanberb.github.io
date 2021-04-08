@@ -312,7 +312,7 @@
 
         // workers: ウィンドウイベントでに光り輝く可愛い関数たち
         window.addEventListener('load', () => {
-            if (window.innerWidth < window.innerHeight) document.querySelector('#app').style.height = window.innerHeight;
+            if (window.innerWidth < window.innerHeight) document.querySelector('#app').style.height = 'calc(100vh - 80px)';
             console.log(window.navigator.userAgent.toLowerCase())
             const hashString = location.hash.substr(1);
             history.replaceState('', document.title, window.location.pathname);
