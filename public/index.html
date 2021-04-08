@@ -13,8 +13,10 @@
 </head>
 <body>
     <div id="app">
-        <div class="dawn">
-            <img class="cat" src="./assets/svg/layer1.svg">
+        <div class="background">
+            <div class="dawn">
+                <img class="cat" src="./assets/svg/layer1.svg">
+            </div>
         </div>
         <div class="enableMusic">
             <p>
@@ -69,8 +71,8 @@
         <div class="slider">
             <div class="me">
                 <div class="box">
+                    <h1>Lanberb</h1>
                 </div>
-                <h1>Lanberb</h1>
             </div>
         </div>
         <div class="viewer">
@@ -95,6 +97,9 @@
                     </a>
                 </div>
             </div>
+        </div>
+        <div class="about">
+            <h1>Design is to Inspire People!</h1>
         </div>
     </div>
     <div id="cursor"></div>
@@ -127,6 +132,7 @@
         const el_viewer_thumbnail = document.querySelector('.viewer .thumbnail');
         const el_viewer_thumbnail_img = document.querySelector('.viewer .thumbnail img');
         const el_viewer_body = document.querySelector('.viewer .body');
+        const el_about = document.querySelector('.about');
 
         // methods: 私が書いた可愛い関数たち
         // 値返す系, 関数式
@@ -167,6 +173,24 @@
                 display: 'none',
             });
         }
+        async function backHome() {
+            el_slider.scrollTo(0, 0);
+            el_slider.style.display = 'flex';
+            const tl = new TimelineMax();
+            await tl.set(el_dawn, {
+                maxWidth: dawn_size(),
+                maxHeight: dawn_size(),
+            }).to(el_viewer, 0.25, {
+                opacity: 0,
+            }).to(el_slider, 0.25, {
+                opacity: 1,
+            }).to([el_viewer_title, el_viewer_subtitle], 0.25, {
+                '-webkit-filter': `blur(80px)`,
+            });
+            el_viewer.style.display = await 'none';
+            el_about.style.display = 'none';
+            await toHome();
+        }
         async function toHome(){
             const tl = new TimelineMax();
             await tl.to([el_enableMusic, '.dawn img'], 0.5, {
@@ -186,11 +210,11 @@
                 height: 0,
             }, {
                 ease: Back.easeOut.config(1),
-                width: '360px',
+                width: window.innerWidth > 1080 ? '360px' : '200px',
             }).to('.box', 0.25, {
                 delay: 0.5,
                 ease: Back.easeOut.config(1),
-                height: '360px',
+                height: window.innerWidth > 1080 ? '360px' : '200px',
             }).to('.slider .me h1', 1, {
                 '-webkit-filter': `blur(0)`,
             }).staggerTo('.slide', 0.15, {
@@ -198,23 +222,6 @@
             }, 0.1).set(el_slider, {
                 'pointer-events': 'all',
             });
-        }
-        async function backHome() {
-            el_slider.scrollTo(0, 0);
-            el_slider.style.display = 'flex';
-            const tl = new TimelineMax();
-            await tl.set(el_dawn, {
-                maxWidth: dawn_size(),
-                maxHeight: dawn_size(),
-            }).to(el_viewer, 0.25, {
-                opacity: 0,
-            }).to(el_slider, 0.25, {
-                opacity: 1,
-            }).to([el_viewer_title, el_viewer_subtitle], 0.25, {
-                '-webkit-filter': `blur(80px)`,
-            });
-            el_viewer.style.display = await 'none';
-            await toHome();
         }
         async function toContent() {
             const i = parseInt(location.hash.slice(1), 10);
@@ -238,6 +245,8 @@
             await insertElement(contents.items[i].fields.contents.content);
         }
         async function toAbout() {
+            console.log('about')
+            el_about.style.display = 'display';
             el_slider.style.display = 'none';
             el_viewer.style.display = 'none';
             el_slider.scrollTo(0, 0);
@@ -247,10 +256,10 @@
                 height: 0,
             }).to([el_viewer_title, el_viewer_subtitle], 2, {
                 '-webkit-filter': `blur(0)`,
+            }).to(el_about, 0.5, {
+                opacity: 1,
             });
-            // .to(el_slider, 0.5, {
-            //     opacity: 0,
-            // }).set(el_viewer, {
+            // .set(el_viewer, {
             //     display: 'block',
             // }).to(el_viewer, 0.5, {
             //     opacity: 1,
@@ -258,7 +267,6 @@
             //     '-webkit-filter': `blur(0)`,
             // });
         }
-        
 
         // 動的処理系
         function enableMusic(bool){
@@ -361,6 +369,7 @@
             })
         });
         window.addEventListener('hashchange', async (e) => {
+            // el_dawn.style.background = `linear-gradient(rgb(10, 4, 60) -50%, rgb(10, 4, 60) -30%, rgb(3, 80, 111) 20%, rgb(250, 174, 123))`;
             if (!location.hash || location.hash == '#works') backHome();
             if (!!location.hash) {
                 if (location.hash == '#about') {
