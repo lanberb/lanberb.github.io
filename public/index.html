@@ -40,10 +40,7 @@
         </div>
         <div class="loading">
             <p class="message">
-                <span>May we make this encounter great.</span>
-            </p>
-            <p class="percentage">
-                <span>0</span>
+                <span></span>
             </p>
         </div>
         <div class="navigation">
@@ -117,12 +114,14 @@
         let contents = {};
         const dawnDuraion = 60;
         const dawnInterval = 10;
+        const messages = ["May we make this encounter great.", "It's an honor to meet you.", "How did you come here?", "Inspire people by computer graphic."];
+
         // 要素系
         const el_cursor = document.querySelector('#cursor');
         const el_dawn = document.querySelector('.dawn');
         const el_enableMusic = document.querySelector('.enableMusic');
+        const el_loading = document.querySelector('.loading');
         const el_loading_message = document.querySelector('.loading .message span');
-        const el_loading_percentage = document.querySelector('.loading .percentage span');
         const el_nav = document.querySelector('.navigation');
         const el_slider = document.querySelector('.slider');
         const el_slider_me = document.querySelector('.slider .me');
@@ -141,17 +140,16 @@
             if (window.innerWidth > window.innerHeight) return window.innerHeight * 3;
             if (window.innerWidth < window.innerHeight) return window.innerWidth * 3;
         };
-        
+        const swapMessage = () => {
+            return messages[Math.floor(Math.random() * messages.length)];
+        };
         // アニメーション系
-        async function countUp(num){
-            for (let i = 0; i < num; i++) {
-                if (el_loading_percentage.textContent < 100) {
-                    el_loading_percentage.textContent++;
-                    // const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${75 - i}%, rgb(3, 80, 111) ${80 - i}%, rgb(113, 70, 116) ${100 - i}%, rgb(159, 105, 118), rgb(204, 139, 121), rgb(250, 174, 123))`;
-                    const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${70 - i}%, rgb(3, 80, 111) ${120 - i}%, rgb(250, 174, 123))`;
-                    el_dawn.style.background = gradient;
-                }
-                if (el_loading_percentage.textContent == 50) el_loading_message.textContent = "It's an honor to meet you.";
+        async function countUp(){
+            for (let i = 0; i < 100; i++) {
+                if (i === 99) return loadComplete();
+                // const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${75 - i}%, rgb(3, 80, 111) ${80 - i}%, rgb(113, 70, 116) ${100 - i}%, rgb(159, 105, 118), rgb(204, 139, 121), rgb(250, 174, 123))`;
+                const gradient = `linear-gradient(rgb(10, 4, 60) ${50 -  i}%, rgb(10, 4, 60) ${70 - i}%, rgb(3, 80, 111) ${120 - i}%, rgb(250, 174, 123))`;
+                el_dawn.style.background = gradient;
                 await sleep(0.01);
             }
         }
@@ -162,7 +160,7 @@
             await tl.set(el_dawn, {
                 maxWidth: dawn_size(),
                 maxHeight: dawn_size(),
-            }).to([el_loading_percentage, el_loading_message], 0.5, {
+            }).to(el_loading_message, 0.5, {
                 opacity: 0,
             }).set(el_enableMusic, {
                 display: 'block',
@@ -173,8 +171,9 @@
                 display: 'none',
             });
         }
-        async function backHome() {
+        async function backHome(){
             el_slider.scrollTo(0, 0);
+            el_viewer.scrollTo(0, 0);
             el_slider.style.display = 'flex';
             const tl = new TimelineMax();
             await tl.set(el_dawn, {
@@ -222,7 +221,7 @@
                 'pointer-events': 'all',
             });
         }
-        async function toContent() {
+        async function toContent(){
             const i = parseInt(location.hash.slice(1), 10);
             const tl = new TimelineMax();
             el_viewer.style.display = 'block';
@@ -243,8 +242,7 @@
             el_slider.style.display = await 'none';
             await insertElement(contents.items[i].fields.contents.content);
         }
-        async function toAbout() {
-            console.log('about')
+        async function toAbout(){
             el_about.style.display = 'display';
             el_slider.style.display = 'none';
             el_viewer.style.display = 'none';
@@ -265,6 +263,7 @@
             //     '-webkit-filter': `blur(0)`,
             // });
         }
+
         // 動的処理系
         function enableMusic(bool){
             music.loop = true;
@@ -275,7 +274,7 @@
         function selectContent(index){
             location.hash = index;
         }
-        function insertElement(contents) {
+        function insertElement(contents){
             while (el_viewer_body.firstChild) el_viewer_body.removeChild(el_viewer_body.firstChild);
             for (let i = 0; i < contents.length; i++) {
                 if (contents[i].nodeType == 'paragraph') makeParagraph(contents[i]);
@@ -283,7 +282,7 @@
                 if (contents[i].nodeType == 'hr')  makeHr(contents[i]);
             }
         }
-        function makeParagraph(data) {
+        function makeParagraph(data){
             const p = document.createElement('p');
             const texts = data.content[0].value.split(/\r\n|\n|\r/);
             for (let i = 0; i < texts.length; i++) {
@@ -296,7 +295,7 @@
             }
             el_viewer_body.appendChild(p);
         }
-        function makeImage(data) {
+        function makeImage(data){
             const div = document.createElement('div');
             const img = document.createElement('img');
             div.classList.add('imgBox');
@@ -304,13 +303,18 @@
             div.appendChild(img);
             el_viewer_body.appendChild(div);
         }
-        function makeHr(data) {
+        function makeHr(data){
             const hr = document.createElement('hr');
             hr.setAttribute('noshade', 'noshade');
             el_viewer_body.appendChild(hr);
         }
 
         // workers: ウィンドウイベントでに光り輝く可愛い関数たち
+        window.addEventListener('DOMContentLoaded', () => {
+            setInterval(() => {
+                el_loading_message.textContent = swapMessage();
+            }, 3000);
+        });
         window.addEventListener('load', () => {
             if (window.innerWidth < window.innerHeight) document.querySelector('#app').style.height = 'calc(100vh - 80px)';
             console.log(window.navigator.userAgent.toLowerCase())
@@ -322,10 +326,9 @@
                 const reader = res.body.getReader();
                 reader.read().then(async function processResult(result) {
                     // このifは1行目に！ここじゃなくても動くけど、result.done == true時に[Error]result.value.length is undefined が出て不細工！！
-                    if (result.done) return loadComplete();
+                    if (result.done) return countUp();
                     let chunk = result.value.length;
                     let percentage = Math.round(chunk / total * 100);
-                    await countUp(percentage);
                     await sleep(0.5);
                     return reader.read().then(processResult);
                 });

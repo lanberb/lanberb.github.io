@@ -248,6 +248,9 @@ html, body{
             top: 50%;
             transform: translateY(-50%);
             opacity: 0;
+            @media (max-width: 1080px) {
+                margin-right: 80px;
+            }
             &:hover{
                 border: none;
                 &::before{
@@ -354,14 +357,18 @@ html, body{
             padding-top: 320px;
             padding-left: 160px;
             padding-right: 160px;
-            width: 100%;
+            width: calc(100% - 320px);
             @media (max-width: 1080px) {
+                padding-top: 160px;
                 padding-left: 40px;
                 padding-right: 40px;
+                width: calc(100% - 80px);
             }
             @media (max-width: 540px) {
+                padding-top: 160px;
                 padding-left: 0;
                 padding-right: 0;
+                width: 100%;
             }
             div.img{
                 margin-top: 200px;
@@ -541,7 +548,7 @@ html, body{
                     width: calc((100vw - 80px - 40px));
                 }
                 @media (max-width: 540px) {
-                    margin-bottom: 320px;
+                    margin-bottom: 160px;
                     width: calc((100vw - 80px));
                     a{
                         span{
