@@ -75,11 +75,12 @@
             slidesPerView: 2,
             centeredSlides: true,
         });
-        fetch('http://lanberb.herokuapp.com/api/contents', {
+        fetch('https://lanberb.herokuapp.com/api/contents', {
             mode: 'cors'
         })
         .then(res => {
             res.json();
+            console.log(res)
         })
         .then(data => {
             console.log(data)
