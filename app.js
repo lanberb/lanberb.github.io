@@ -9,15 +9,11 @@ const client = contentful.createClient({
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-    try {
-        console.log('Server activated🍎');
-    } catch(error) {
-        console.log('Server Error!!');
-    }
+    try { console.log('Server activated🍎'); } 
+    catch { console.log('Server Error!!'); }
 });
-app.use(express.static('public'));
-app.get('/api/origin', (req, res) =>  {
+app.get('/api/contents', (req, res) =>  {
   return client.getEntries().then(response => {
-      res.json(response)
+      res.json(response);
   });
 });

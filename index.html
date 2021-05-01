@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./assets/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/css/swiper.min.css">
+    <link rel="stylesheet" href="./assets/styles/index.min.css">
+    <style>
+        *{margin: 0; padding: 0;}
+        html, body{overflow: hidden;}
+    </style>
+    <title>Nao Sasaki｜Lanberb</title>
+</head>
+<body>
+    <div id="app">
+        <div class="eye"></div>
+        <main>
+            <div class="slider">
+                <div class="swiper-container">
+                    <!-- メイン表示部分 -->
+                    <div class="swiper-wrapper">
+                        <!-- 各スライド -->
+                        <div class="swiper-slide">
+                            <div class="img">
+                                <img src="./assets/noname.png">
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="img">
+                                <img src="./assets/noname1.png">
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="img">
+                                <img src="./assets/noname2.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="name">
+                    <p class="title">
+                        <span>Robotics Course. Corporate Site.</span>
+                    </p>
+                    <ul class="description">
+                        <li>
+                            <span>UI/UX Design</span>
+                        </li>
+                        <li>
+                            <span>Front-end Development</span>
+                        </li>
+                        <li>
+                            <span>Freelance Work</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="detail"></div>
+        </main>
+        <div class="navigation"></div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.3/js/swiper.min.js"></script>
+    <script>
+        // variables: 頑張る健気な変数たち
+        // let music = new Audio('./assets/music/bgm_maoudamashii_piano39.mp3'); 
+        // music.volume = 0.1;
+
+        // 値返す系, 関数式
+        const sleep = (sec) => new Promise((resolve, reject) => setTimeout(resolve, sec * 1000));
+        // window.addEventListener('focus', (e) => music.volume = 0.1);
+        // window.addEventListener('blur', (e) => music.volume = 0.0);
+
+        const swiper = new Swiper('.swiper-container', {
+            direction: 'horizontal',
+            slidesPerView: 2,
+            centeredSlides: true,
+        });
+    </script>
+</body>
+</html>

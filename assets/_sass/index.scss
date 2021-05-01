@@ -1,0 +1,62 @@
+@charset "utf-8";
+@font-face {
+    font-family: 'Hannari-otf';
+    src: url("../webfonts/hannari/HannariMincho.otf") format("opentype");
+}
+@font-face {
+    font-family: 'Hannari-ttf';
+    src: url("../webfonts/hannari/HannariMincho.ttf") format("truetype");
+}
+@font-face {
+    font-family: 'eustache-otf';
+    src: url("../webfonts/eustache/eustache.otf") format("opentype");
+}
+@font-face {
+    font-family: 'eustache-ttf';
+    src: url("../webfonts/eustache/eustache.ttf") format("truetype");
+}
+
+*{transition: 500ms; margin: 0; padding: 0;}
+$font-ja: 'Hannari-otf', 'Hannari-ttf', serif;
+$font-en: 'eustache-otf', 'eustache-ttf', fantasy, cursive;
+html, body{
+    touch-action: none;
+    -webkit-font-smoothing: antialiased;
+    background: #11100E;
+}
+#app{
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: scroll;
+}
+/* 全体のスタイル */
+.swiper-wrapper {
+	width: 1200px;
+	height: 100vh;
+}
+/* 全スライド共通スタイル */
+.swiper-slide {
+    transition: 250ms;
+	width: 100vw;
+	height: 100%;
+    clip-path: circle(7.8125vw at 50% 50%);
+    div.img{
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 31.25vw;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+.swiper-slide-active{
+    clip-path: circle(15.625vw at 50% 50%);
+}
+@media (min-width: 480px) {
+}
