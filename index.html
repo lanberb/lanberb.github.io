@@ -18,9 +18,8 @@
         <main>
             <div class="slider">
                 <div class="swiper-container">
-                    <!-- メイン表示部分 -->
+
                     <div class="swiper-wrapper">
-                        <!-- 各スライド -->
                         <div class="swiper-slide">
                             <div class="img">
                                 <img src="./assets/noname.png">
@@ -76,6 +75,15 @@
             slidesPerView: 2,
             centeredSlides: true,
         });
+        fetch('http://lanberb.herokuapp.com/api/contents', {
+            mode: 'cors'
+        })
+        .then(res => {
+            res.json();
+        })
+        .then(data => {
+            console.log(data)
+        })
     </script>
 </body>
 </html>

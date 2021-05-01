@@ -14,6 +14,9 @@ app.listen(port, () => {
 });
 app.get('/api/contents', (req, res) =>  {
   return client.getEntries().then(response => {
+    res.header('Access-Control-Allow-Origin', 'https://github.com/lanberb.github.io');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept');
       res.json(response);
   });
 });
