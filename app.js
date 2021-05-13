@@ -7,7 +7,6 @@ const client = contentful.createClient({
     accessToken: 'NVUyKttt2nGxq_37QBc0sTg3UT9B2haI364St62xgUc',
 });
 const port = process.env.PORT || 8080;
-
 app.listen(port, () => {
     try { console.log('Server activated🍎'); } 
     catch { console.log('Server Error!!'); }
