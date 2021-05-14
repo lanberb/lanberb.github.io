@@ -246,6 +246,7 @@ html, body{
     }
     div.about{
         display: none;
+        padding-bottom: 32px;
         padding-left: 18.75vw;
         padding-right: 18.75vw;
         overflow: scroll;
@@ -315,7 +316,7 @@ html, body{
             div.link{
                 justify-content: space-around;
                 width: calc(100vw - #{$page-padding} * 2);
-                top: calc(100% - 40px);
+                top: calc(100% - 80px);
                 left: $page-padding;
                 transform: rotate(0);
                 &:last-child{
