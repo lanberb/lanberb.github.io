@@ -10,6 +10,7 @@
 </head>
 <body>
     <div id="app">
+        <h1 class="xbox" style="color: aliceblue;"></h1>
         <div class="eye">
             <div class="stroke">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1208 488">
@@ -87,10 +88,10 @@
             <div class="swiper-pagination"></div>
             <div class="link">
                 <p>
-                    <a target="_blank" rel="noopener" href="https://twitter.com/lanberb_2">TWITTER</a>
+                    <a target="_blank" rel="noopener" href="https://www.instagram.com/lanberb">IG</a>
                 </p>
                 <p>
-                    <a target="_blank" rel="noopener" href="https://www.instagram.com/lanberb">INSTAGRAM</a>
+                    <a target="_blank" rel="noopener" href="https://twitter.com/lanberb_2">TW</a>
                 </p>
             </div>
         </div>
@@ -307,13 +308,13 @@
                 hr.setAttribute('noshade', 'noshade');
             return hr;
         }
-        const makeSlide = data => {}
+
 
         function anime_blink(toggle) {
             return new Promise(resolve => {
                 let val;
                 if (toggle) val = [1, 1]; // 開眼
-                if (!toggle)  val = [1.2, 0.001]; // 瞳を閉じる
+                if (!toggle)  val = [1.2, 0.0001]; // 瞳を閉じる
                 TweenMax.to(el_eye, 0.25, {
                     ease: 'linear',
                     scaleX: val[0],
@@ -342,7 +343,6 @@
         function insertElement(contents){
             for (let i = 0; i < contents.length; i++) {
                 const data = contents[i];
-                console.log(data.nodeType)
                 if (data.nodeType == 'paragraph') {
                     if (data.content.map(el => el.nodeType).includes('hyperlink')) el_viewer.appendChild(makeHyperlink(data));
                     else el_viewer.appendChild(makeParagraph(data));
@@ -391,10 +391,10 @@
                 behavior: 'smooth'
             });
             await sleep(0.5);
-            document.body.style.background = await '#fff';
+            document.body.style.background = await '#f9f9f9';
             await TweenMax.to(['.swiper-slide:not(.swiper-slide-active)', el_pagination, el_swiperPagination], 0.5, {
                 opacity: 0,
-                onComplete: () => insertElement(contents.items[index].fields.contents.content)
+                onComplete: () => insertElement(contents.items[index].fields.contents.content),
             });
         }
 
@@ -417,6 +417,7 @@
                 await Object.assign(contents, data);
                 await addSlide();
                 swiper = await new Swiper('.swiper-container', swiperConfig);
+                await sleep(1);
                 await tl.to(el_swiperContainer, 0.5, {
                     ease: 'linear',
                     width: window.innerWidth,
@@ -435,6 +436,10 @@
                 swiper.slideTo(parseInt(hash, 10));
                 setContent(parseInt(hash, 10))
             };
+        });
+        window.addEventListener('resize', () => {
+            const vh = window.innerHeight;
+            document.querySelector('.xbox').textContent = vh
         });
     </script>
 </body>
